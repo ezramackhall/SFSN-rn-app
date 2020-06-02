@@ -311,12 +311,11 @@ const styles = StyleSheet.create({
     },
     image: {
         margin: 20,
-        marginLeft: 30,
         width: 300,
         height: 200
     },
     buttonContainer: {
-        marginVertical: 20,
+        marginVertical: 50,
         shadowColor: 'black',
         shadowOpacity: 0.26,
         shadowOffset: { width: 0, height: 2 },
@@ -331,6 +330,8 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     imageCard: {
+        alignItems: 'center',
+        marginVertical: 50
 
     },
     loginInfo:{
