@@ -1,17 +1,25 @@
-import React from 'react';
-import {StyleSheet, View, Button, FlatList, Alert, Text} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {StyleSheet, View, Button, FlatList, Alert, Text, TouchableOpacity} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 
 import ProductItem from '../../components/shop/ProductItem';
 import HeaderButton from '../../components/ui/HeaderButton';
 import Colors from '../../constants/Colors';
-import * as productsActions from '../../store/actions/products';
+import * as nannyActions from '../../store/actions/nannies';
 
 
-const UserProductsScreen = props => {
-    const userProducts = useSelector(state => state.products.userProducts);
+const NannyListScreen = props => {
+    const nannies = useSelector(state => state.nannies.nannies);
     const dispatch = useDispatch();
+
+    const loadNannies = useCallback (async () => {
+        try {
+            await dispatch(nannyActions.fetchNannies());
+        } catch (error){
+            console.log(err);
+        }
+    }, [dispatch]);
 
     const editProductHandler = (id) => {
         props.navigation.navigate('EditProduct', {productId: id})
@@ -27,7 +35,19 @@ const UserProductsScreen = props => {
         ])
     };
 
-    if(userProducts.length === 0){
+    const nannySelectHandler = nanny => {
+        props.navigation.navigate('NannyInfo', {
+            nanny: nanny,
+            nannyName: nanny.firstName + ' ' + nanny.lastName
+        })
+    };
+
+    useEffect(() => {
+        loadNannies().then(()=> {
+        });
+    }, [dispatch, loadNannies]);
+
+    if(!nannies){
         return (
             <View style={styles.screen}>
                 <Text>No Products Have Been Created By The Current User</Text>
@@ -36,30 +56,23 @@ const UserProductsScreen = props => {
     }
 
     return (
-        <View>
+        <View style={styles.screen}>
         <FlatList 
-            data={userProducts} 
+            data={nannies} 
             keyExtractor={item => item.id} 
             renderItem={itemData => (
-                <ProductItem 
-                    image = {itemData.item.imageUrl}
-                    price = {itemData.item.price}
-                    title = {itemData.item.title}
-                    onSelect = {() => editProductHandler(itemData.item.id)}
-                >
-            <Button
-                color={Colors.primary}
-                title="Edit"
-                onPress={() => {
-                    editProductHandler(itemData.item.id)
-                }}
-            />
-            <Button
-                color={Colors.primary}
-                title="Delete"
-                onPress={() => deleteHandler(itemData.item.id)}
-            />
-                </ProductItem>
+                <View style = {styles.nannyContainer}>
+                    <TouchableOpacity onPress={() => {nannySelectHandler(itemData.item)}}>
+                        <View style={styles.nameContainer}>
+                            <Text>First Name: </Text>
+                            <Text style={styles.outputText}>{itemData.item.firstName}</Text>
+                        </View>
+                        <View style={styles.nameContainer}>
+                            <Text>Last Name: </Text>
+                            <Text style={styles.outputText}>{itemData.item.lastName}</Text>
+                        </View>
+                        </TouchableOpacity>
+                </View>
             )} />
         </View>
     )
@@ -69,7 +82,23 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1, 
         justifyContent: 'center',
-        alignItems: 'center'
+    },
+    nannyContainer: {
+        shadowColor: 'black',
+        shadowOpacity: 0.26,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+        elevation: 5,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        margin: 20,
+        padding: 10,
+    },
+    nameContainer: {
+        flexDirection: 'row',
+    },
+    outputText: {
+        color: '#888'
     }
 });
 
@@ -101,4 +130,4 @@ export const screenOptions = navData => {
     }
 }
 
-export default UserProductsScreen;
+export default NannyListScreen;

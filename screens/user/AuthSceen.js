@@ -1,7 +1,6 @@
 import React, {useReducer, useCallback, useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, View, KeyboardAvoidingView, Button, Image, ActivityIndicator, Alert, Text} from 'react-native';
 import {useDispatch} from 'react-redux';
-import DropDownPicker from 'react-native-dropdown-picker';
 import RNPickerSelect from 'react-native-picker-select';
 
 import Input from '../../components/ui/Input';
@@ -40,6 +39,7 @@ const AuthScreen = props => {
     const [cityPicker, setCityPick] = useState('');
     const [provincePicker, setProvincePick] = useState('');
     const [countryPicker, setCountryPick] = useState('');
+    const [isNanny, setIsNanny] = useState(false);
     const cityData = [
         {label: 'Winnipeg', value: 'Winnipeg'},
         {label: 'Brandon', value: 'Brandon'},
@@ -81,7 +81,6 @@ const AuthScreen = props => {
      });
 
      const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
-         console.log(inputValidity);
         dispatchFormState({
             type: FORM_UPDATE, 
             value: inputValue, 
@@ -105,14 +104,16 @@ const AuthScreen = props => {
                         formState.inputValues.postalCode,
                         formState.inputValues.city, 
                         formState.inputValues.province,
-                        formState.inputValues.country
+                        formState.inputValues.country,
+                        false
                     )
                 );
             }else{
                 await dispatch(
                     authActions.login(
                         formState.inputValues.email, 
-                        formState.inputValues.password
+                        formState.inputValues.password,
+                        isNanny
                     )
                 );
             }
@@ -144,11 +145,13 @@ const AuthScreen = props => {
         };
 
     return (
+
         <KeyboardAvoidingView 
-            behavior='padding' 
+            behavior='position' 
             keyboardVerticalOffset={50}
             style={styles.screen} 
         >
+            <View>
             <ScrollView>
             {!isSignup && 
                 <View style={styles.imageCard}>
@@ -166,6 +169,32 @@ const AuthScreen = props => {
                     </View>}
                     <View style={isSignup ? styles.loginInfo : ''}>
                         <View style={!isSignup ? styles.loginInfo : ''}>
+                            {!isSignup && <View style={styles.center}>
+                                <View style={styles.switchContainer}>
+                                    <View 
+                                        style={isNanny ? 
+                                            {backgroundColor: 'white'} : 
+                                            {backgroundColor: Colors.primary}
+                                        }
+                                    >
+                                        <Button 
+                                            color={isNanny ? Colors.primary : 'white'} 
+                                            title="Parent" onPress={()=> {setIsNanny(false)}}
+                                        />
+                                    </View>
+                                    <View 
+                                        style={isNanny ? 
+                                            {backgroundColor: Colors.primary} : 
+                                            {backgroundColor: 'white'}
+                                        }
+                                    >
+                                        <Button 
+                                            color={isNanny ? 'white' : Colors.primary} 
+                                            title="Nanny" onPress={()=> {setIsNanny(true)}}
+                                        />
+                                    </View>
+                                </View>
+                            </View>}
                             <Input 
                                 id='email' 
                                 label='E-mail' 
@@ -296,6 +325,7 @@ const AuthScreen = props => {
                     </View>
                 </View>
             </ScrollView>
+            </View>
         </KeyboardAvoidingView>
     )
 }
@@ -310,7 +340,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20
     },
     image: {
-        margin: 20,
+        margin: 15,
         width: 300,
         height: 200
     },
@@ -346,6 +376,12 @@ const styles = StyleSheet.create({
     },
     validError: {
         color: Colors.primary
+    },
+    switchContainer: {
+        flexDirection: 'row',
+    },
+    center: {
+        alignItems: 'center'
     }
 
 });
