@@ -19,7 +19,7 @@ const BookingItem = props => {
                 <Text style = {styles.date}>Request End Time: {props.endDate}</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <Button 
+                {props.isPaid && <Button 
                     color ={Colors.primary}
                     title = {showDetails ? "Hide Details" : "Show Details"}
                     onPress={() => 
@@ -27,14 +27,14 @@ const BookingItem = props => {
                             setShowDetails(prevState => !prevState)
                         }
                     }
-                />
-                <Button
+                />}
+                {!props.isPaid && <Button
                     color = {Colors.primary}
                     title = "Pay Booking Now"
                     onPress = {() => {
                         navigation.navigate("BookingPayment");
                     }}
-                />
+                />}
             </View>
             {showDetails && (
                 <View style= {styles.orderItems}>

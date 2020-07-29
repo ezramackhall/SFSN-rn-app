@@ -21,6 +21,7 @@ import BookingsScreen, {screenOptions as bookingsScreenOptions} from '../screens
 import ParentListScreen, {screenOptions as parentListScreenOptions} from '../screens/user/ParentListScreen';
 import NannyBookingScreen, {screenOptions as nannyBookingScreenOptions}from '../screens/shop/NannyBookingScreen';
 import TimeSheetScreen, {screenOptions as timeSheetScreenOptions} from '../screens/user/TimeSheetScreen';
+import EventMindingRequestScreen, {screenOptions as eventMindingRequestScreenOptions} from '../screens/shop/EventMindingRequestScreen';
 import BookingPaymentScreen from '../screens/shop/BookingPaymentScreen';
 import MessagingSelectorScreen from '../screens/user/MessageSelection';
 import MessagingScreen, {screenOptions as messagingScreenOptions} from '../screens/user/Messaging';
@@ -244,6 +245,19 @@ const NannyBookingNavigator = () => {
     )
 }
 
+const EventMindingStackNavigator = createStackNavigator();
+
+const EventMindingNavigator = () => {
+    return (<EventMindingStackNavigator.Navigator screenOptions={defaultNavOptions}>
+        <EventMindingStackNavigator.Screen
+            name="EventBooking"
+            component={EventMindingRequestScreen}
+            options={eventMindingRequestScreenOptions}
+        />
+    </EventMindingStackNavigator.Navigator>
+    )
+}
+
 const TimeSheetManagementStackNavigator = createStackNavigator();
 
 const TimeSheetManagementNavigator = () => {
@@ -320,6 +334,18 @@ export const ShopNavigator = props => {
                 drawerIcon: props => 
                     <Ionicons
                         name='ios-calendar'
+                        size={23}
+                        color={props.color}
+                    />  
+            }}
+        />
+        <ShopDrawerNavigator.Screen 
+            name="Event Bookings" 
+            component={EventMindingNavigator}
+            options={{
+                drawerIcon: props => 
+                    <Ionicons
+                        name='ios-car'
                         size={23}
                         color={props.color}
                     />  

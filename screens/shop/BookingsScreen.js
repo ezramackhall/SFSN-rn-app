@@ -71,6 +71,7 @@ const BookingsScreen = props => {
                             startDate={itemData.item.startDate}
                             endDate={itemData.item.endDate}
                             requestId={itemData.item.id}
+                            isPaid={false}
                             />
                     </View>
                 )
@@ -91,6 +92,7 @@ const BookingsScreen = props => {
                             startDate={itemData.item.startDate}
                             endDate={itemData.item.endDate}
                             requestId={itemData.item.id}
+                            isPaid={true}
                             />
                     </View>
                 )

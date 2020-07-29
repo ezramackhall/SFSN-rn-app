@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 
 import UserItem from './UserItem';
+import RequestInfo from './RequestInfo'
 import Colors from '../../constants/Colors';
 
 const RequestItem = props => {
@@ -39,6 +40,7 @@ const RequestItem = props => {
             </View>
             {showDetails && (
                 <View style= {styles.orderItems}>
+                    <RequestInfo itemData={props.itemData}/>
                     <UserItem user={props.user} title="Requested By"/>
                     <Text>Date of request: {props.submitDate}</Text>
                 </View>

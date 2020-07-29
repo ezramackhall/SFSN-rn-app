@@ -58,6 +58,7 @@ const AuthScreen = props => {
         inputValues: {
             email: '',
             password: '',
+            confirmPassword: '',
             firstName: '',
             lastName: '',
             postalCode: '',
@@ -69,6 +70,7 @@ const AuthScreen = props => {
         inputValidities: {
             email: false,
             password: false,
+            confirmPassword: false,
             firstName: false,
             lastName: false,
             postalCode: false,
@@ -98,6 +100,7 @@ const AuthScreen = props => {
                     authActions.signup(
                         formState.inputValues.email, 
                         formState.inputValues.password,
+                        formState.inputValues.confirmPassword,
                         formState.inputValues.firstName, 
                         formState.inputValues.lastName,
                         formState.inputValues.address,
@@ -217,6 +220,17 @@ const AuthScreen = props => {
                                 initialValue = ''
                                 onInputChange= {inputChangeHandler}
                             />
+                            {isSignup && 
+                            <Input 
+                                id='confirmPassword' 
+                                label='Confirm Password' 
+                                keyboardType = 'default'
+                                secureTextEntry
+                                confirmPassword = {formState.inputValues.password}
+                                errorText="Password Does Not Match Or Is Blank"
+                                initialValue = ''
+                                onInputChange= {inputChangeHandler}
+                            />}
                         </View>
                         {isSignup && 
                         (<View>

@@ -61,6 +61,9 @@ const Input = props => {
         if (props.minLength != null && text.length < props.minLength) {
         isValid = false;
         }
+        if(props.confirmPassword != null && text !== props.confirmPassword){
+        isValid = false
+        }
         dispatch({type: INPUT_CHANGE, value: text, isValid: isValid})
         dispatch({type:INPUT_BLUR})
     };

@@ -36,6 +36,8 @@ export const fetchRequests = () => {
                         convertDate(currentRequest.startTime),
                         convertDate(currentRequest.endTime),
                         currentRequest.numberOfChildren,
+                        currentRequest.specialInfo,
+                        currentRequest.pets,
                         currentRequest.description,
                         currentRequest.isPaid
                     )
@@ -106,7 +108,7 @@ export const fetchBookings = () => {
     };
 };
 
-export const createRequest = (startTime, endTime, numberOfChildren, description) => {
+export const createRequest = (startTime, endTime, numberOfChildren, specialInfo, pets, description) => {
     return async (dispatch, getState) => {
         const token = getState().auth.token;
         const userId = getState().auth.userId;
@@ -123,6 +125,8 @@ export const createRequest = (startTime, endTime, numberOfChildren, description)
                 endTime,
                 numberOfChildren,
                 description,
+                specialInfo,
+                pets,
                 isPaid: false
             })
         });
@@ -143,6 +147,8 @@ export const createRequest = (startTime, endTime, numberOfChildren, description)
             convertDate(startTime),
             convertDate(endTime),
             numberOfChildren,
+            specialInfo,
+            pets,
             description
         )
 
@@ -152,6 +158,36 @@ export const createRequest = (startTime, endTime, numberOfChildren, description)
         });
     };
 
+};
+
+export const createEventRequest = (startTime, endTime, numberOfChildren, description, address) => {
+    return async (dispatch, getState) => {
+        const token = getState().auth.token;
+        const userId = getState().auth.userId;
+        const currentDate = new Date().toISOString();
+        const response = await fetch(`https://rn-complete-guide-eh.firebaseio.com/eventchildminding/.json?auth=${token}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                userId,
+                currentDate,
+                startTime,
+                endTime,
+                numberOfChildren,
+                description,
+                address
+            })
+        });
+
+        const resData = await response.json();
+
+        if(!response.ok){
+            console.log(resData);
+            throw new Error('Something went wrong!');
+        }
+    };
 };
 
 export const deleteRequest = requestId => {

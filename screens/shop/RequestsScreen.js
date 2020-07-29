@@ -112,6 +112,7 @@ const RequestsScreen = props => {
                         startDate={itemData.item.startDate}
                         endDate={itemData.item.endDate}
                         requestId={itemData.item.id}
+                        itemData = {itemData.item}
                         isNanny={isNanny}
                         deleteRequest={deleteRequestHandler}
                         acceptRequest={acceptRequestHandler}

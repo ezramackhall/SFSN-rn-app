@@ -14,6 +14,8 @@ import {useDispatch} from 'react-redux';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+import { Ionicons } from '@expo/vector-icons';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 import HeaderButton from '../../components/ui/HeaderButton';
 import Input from '../../components/ui/Input';
@@ -26,12 +28,13 @@ const FORM_UPDATE = 'UPDATE';
 const initialValues = {
     inputValues: {
         children: '',
-        specialInfo: '',
-        pets: '',
-        description: ''
+        description: '',
+        address: ''
     },
     inputValidities: {
         children: false,
+        description: false,
+        address: false
     },
     formIsValid: false
 };
@@ -59,7 +62,7 @@ const formReducer = (state, action) => {
     return state;
 };
 
-const CreateChildminderRequestScreen = props => {
+const EventMindingScreen = props => {
     const [dateStart, setDateStart] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
     const [formState, dispatchFormState] = useReducer(formReducer, initialValues);
@@ -85,23 +88,22 @@ const CreateChildminderRequestScreen = props => {
         }
         try {
             await dispatch(
-                childminderActions.createRequest(
+                childminderActions.createEventRequest(
                     dateStart, 
                     dateEnd,
                     formState.inputValues.children,
-                    formState.inputValues.specialInfo,
-                    formState.inputValues.pets,
-                    formState.inputValues.description
+                    formState.inputValues.description,
+                    formState.inputValues.address
                 )
             )
             Alert.alert('Request Submited', 'Your Request Has Been Submited', [
                 {
                     text: 'Okay',
-                    onPress: () => {
-                        props.navigation.goBack();
-                    }
+                    onPress: () => 
+                        props.navigation.goBack()
                 }
-            ]);    
+            ]); 
+
         } catch (error){
             console.log(error);
         }
@@ -117,8 +119,8 @@ const CreateChildminderRequestScreen = props => {
     }, [dispatchFormState]);
   
     return (
-            <KeyboardAwareScrollView >
-                <View style={styles.screen}>
+            <KeyboardAwareScrollView>
+                <View>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style ={styles.inner}>
                             <View style={styles.requestDetails}>
@@ -131,38 +133,27 @@ const CreateChildminderRequestScreen = props => {
                                     onInputChange={inputChangeHandler}
                                     required
                                 />
-                                 <Input
-                                    id = 'specialInfo'
-                                    label='Special Needs / Alergies (Leave Blank If None)'
-                                    errorText=''
-                                    autoCapitalize = 'sentences'
-                                    autoCorrect
-                                    multiline
-                                    numberOfLines={3}
-                                    onInputChange={inputChangeHandler}
-                                    initialValue=''
-                                />
-                                <Input
-                                    id = 'pets'
-                                    label='List Any Pets'
-                                    errorText=''
-                                    autoCapitalize = 'sentences'
-                                    autoCorrect
-                                    multiline
-                                    numberOfLines={3}
-                                    onInputChange={inputChangeHandler}
-                                    initialValue=''
-                                />
                                 <Input
                                     id = 'description'
-                                    label='Other Important Information'
-                                    errorText=''
+                                    label='Descrption'
+                                    errorText='Please Enter A Description'
                                     autoCapitalize = 'sentences'
                                     autoCorrect
                                     multiline
                                     numberOfLines={5}
                                     onInputChange={inputChangeHandler}
                                     initialValue=''
+                                    required
+                                />
+                                 <Input
+                                    id = 'address'
+                                    label='Address'
+                                    errorText='Please Enter A Address'
+                                    autoCapitalize = 'sentences'
+                                    autoCorrect
+                                    onInputChange={inputChangeHandler}
+                                    initialValue=''
+                                    required
                                 />
                                 </View>
                             </View>
@@ -208,7 +199,18 @@ const CreateChildminderRequestScreen = props => {
 
 export const screenOptions = navData=> {
     return{
-        headerTitle: 'Childminder Request',
+        headerTitle: 'Event Childminder Request',
+        headerLeft: () => (
+            <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item 
+                    title='Cart' 
+                    iconName='ios-menu' 
+                    onPress={() => {
+                        navData.navigation.toggleDrawer();
+                    }}
+                />
+            </HeaderButtons>
+            )
     };
 };
 
@@ -231,10 +233,7 @@ const styles = StyleSheet.create({
       },
       clockContainer:{
           marginVertical: 20
-      },
-      screen: {
-          paddingBottom: 40
       }
 });
 
-export default CreateChildminderRequestScreen;
+export default EventMindingScreen;

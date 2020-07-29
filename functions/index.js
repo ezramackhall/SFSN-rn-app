@@ -1,7 +1,9 @@
 const functions = require('firebase-functions');
+const firestore = require('@google-cloud/firestore');
 const fetch = require('node-fetch');
 
 const admin = require('firebase-admin');
+const client = new firestore.v1.FirestoreAdminClient();
 admin.initializeApp(functions.config().firebase);
 
 exports.sendPushNotification = functions.database.ref('childminding/requests/{id}')
@@ -35,4 +37,4 @@ exports.sendPushNotification = functions.database.ref('childminding/requests/{id
             body: JSON.stringify(messages)
         })
     })
-})
+});
